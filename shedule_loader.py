@@ -9,7 +9,15 @@ class SheduleLoader:
     def __init__(self):
         self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0'}
         self.url = "https://www.mirea.ru/schedule/"
-        self.shedule = []
+        self.base_dir = "shedule\\"
+
+    
+    def get_xlsxName(self, name) -> str:
+        return self.base_dir + "xlsx\\" + name + ".xlsx"
+
+
+    def get_jsonName(self, name) -> str:
+        return self.base_dir + "json\\" + name + ".json"
 
 
     def get_shedule_refs(self) -> list:
@@ -29,28 +37,56 @@ class SheduleLoader:
         return refs
 
 
-    def parse_shedule(self):
-        # refs = self.get_shedule_refs()
-        # refsFiles = [requests.get(ref, headers=self.headers).content for ref in refs]
-
-        # if not refsFiles:
-        #     raise ValueError("Web service are not available")
-
-        # open("test.xlsx", 'wb').write(refsFiles[0])
-
-        shedule = openpyxl.load_workbook("test.xlsx")
-        sheet = shedule["Лист1"]
-        
-        parser = SheduleParser(sheet)
-        parser.parse()
-        # print(parser.parse())
-        #shedule = openpyxl.load_workbook(refsFiles[0])
-        #sheet = shedule['range names']
-        #print(sheet['D18'].value)
+    def save_in_xlsx(self, ref, fileName) -> None:
+        print(f"Запись {fileName}.xlsx", end="\t")
+        open(self.get_xlsxName(fileName), 'wb').write(ref)
+        print("успешно")
 
 
-    def save_in_json(self) -> None:
-        pass
+    def write_shedules(self, refList, fileNameList) -> None:
+        for (ref, name) in zip(refList, fileNameList):
+            self.save_in_xlsx(ref, name)
+
+
+    def translate_to_json(self, fileNameList) -> None:
+        for name in fileNameList:
+            wb = openpyxl.load_workbook(self.get_xlsxName(name))
+            sheet = wb[wb.sheetnames[0]]
+            
+            parser = SheduleParser(sheet)
+            sheduleList = parser.parse()
+            
+            self.save_in_json(sheduleList, name)
+
+
+    def parse_shedule(self) -> None:
+        refs = self.get_shedule_refs()
+        refsFiles = [requests.get(ref, headers=self.headers).content for ref in refs]
+
+        if not refsFiles:
+            raise ValueError("Web service are not available")
+
+        fileNames = [re.search(r"(\w|[а-яА-Я]|-|\s|\.|\(|\)|,)+.xlsx$", ref).group(0) for ref in refs]
+        fileNames = [re.sub(r"(\s|,|\)|\()", "_", name).replace("..", ".").replace(".xlsx", "") for name in fileNames]
+
+        # Запись файлов
+        self.write_shedules(refsFiles, fileNames)
+
+        # Открытие и парсинг файлов
+        self.translate_to_json(fileNames)
+
+
+    def save_in_json(self, shedule, fileName) -> None:
+        print(f"Запись отформатированных данных в {fileName}.json", end="\t")
+        with open(self.get_jsonName(fileName), 'w', encoding="utf-8") as jsonFile:
+            json.dump(
+                shedule, 
+                jsonFile, 
+                ensure_ascii=False, 
+                indent=2, 
+                separators=(',', ': ')
+            )
+        print("успешно")
 
 
 
@@ -107,9 +143,10 @@ class SheduleParser:
     def get_group_number(self) -> str:
         number = self.table[self.get_cell(2)].value
 
-        # Встретилась запись, отличная от шаблона группы - желтая колонка 'День недели'
+        # Встретилась запись, отличная от шаблона группы
+        # - пустой столбец (в начале) или желтая колонка 'День недели'
         # Нужно прибавить отступ в 5 столбцов
-        if number is not None and not re.compile(r"[а-яА-Я]+-\d+").search(number):
+        if number is None or not re.compile(r"[а-яА-Я]+-\d+").search(number):
             self.colIndex = self.update_colIndex()
 
         return self.table[self.get_cell(2)].value
@@ -120,7 +157,7 @@ class SheduleParser:
 
 
     def get_type_subjects(self, i) -> str:
-        return self.table[self.colIndexSubject(i)].value
+        return self.table[self.colIndexTypeSubject(i)].value
 
 
     def get_teachers(self, i) -> str:
@@ -143,7 +180,6 @@ class SheduleParser:
             shedule.append(self.parse_group())
             self.colIndex = self.update_colIndex()
 
-        print(shedule)
         return shedule
 
 
@@ -177,3 +213,4 @@ class SheduleParser:
 if __name__ == "__main__":
     loader = SheduleLoader()
     loader.parse_shedule()
+    # loader.parse_shedule()

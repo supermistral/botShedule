@@ -1,0 +1,974 @@
+[
+  {
+    "number": "ЭЛБО-01-20",
+    "shedule": [
+      [
+        null,
+        {
+          "pair": "18 н. Программирование",
+          "type": "КР",
+          "teacher": "Лухнев С.Н.",
+          "room": "А-424-1"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Физическая культура и спорт",
+          "type": "зач",
+          "teacher": null,
+          "room": null
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Физика",
+          "type": "зач",
+          "teacher": "Пушкарев С.С.",
+          "room": "В-321"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Немецкий язык",
+          "type": "зач",
+          "teacher": "Зайцев Е.В.",
+          "room": "А-138"
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Документационное обеспечение проектно-конструкторских работ",
+          "type": "зач",
+          "teacher": "Князев Я.О.",
+          "room": "С-20*  254-к"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Иностранный язык",
+          "type": "зач",
+          "teacher": "Малявина Я.С.",
+          "room": "И-318"
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Ознакомительная практика",
+          "type": "ЗД",
+          "teacher": null,
+          "room": "каф."
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ]
+  },
+  {
+    "number": "ЭЛБО-02-20",
+    "shedule": [
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Программирование",
+          "type": "КР",
+          "teacher": "Лухнев С.Н.",
+          "room": "А-424-1"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Иностранный язык",
+          "type": "зач",
+          "teacher": "Каппушева И.Ш.",
+          "room": "И-311"
+        },
+        null,
+        {
+          "pair": "18 н. Немецкий язык",
+          "type": "зач",
+          "teacher": "Гриценко С.А.",
+          "room": "Б-402"
+        },
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Физика",
+          "type": "зач",
+          "teacher": "Шаталов Ф.А.",
+          "room": "В-408"
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Физическая культура и спорт",
+          "type": "зач",
+          "teacher": null,
+          "room": null
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Документационное обеспечение проектно-конструкторских работ",
+          "type": "зач",
+          "teacher": "Князев Я.О.",
+          "room": "С-20*  254-к"
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Ознакомительная практика",
+          "type": "ЗД",
+          "teacher": null,
+          "room": "каф."
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ]
+  },
+  {
+    "number": "ЭОСО-01-20",
+    "shedule": [
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Физика",
+          "type": "зач",
+          "teacher": "Филимонов В.В.",
+          "room": "В-409"
+        },
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Иностранный язык",
+          "type": "зач",
+          "teacher": "Зазымкина Д.А.",
+          "room": "А-324"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Документационное обеспечение проектно-конструкторских работ",
+          "type": "зач",
+          "teacher": "Князев Я.О.",
+          "room": "С-20*  254-к"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Физическая культура и спорт",
+          "type": "зач",
+          "teacher": null,
+          "room": null
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Программирование",
+          "type": "КР",
+          "teacher": "Каленюк И.В.",
+          "room": "А-424-2"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Ознакомительная практика",
+          "type": "ЗД",
+          "teacher": null,
+          "room": "каф."
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ]
+  },
+  {
+    "number": "ЭОСО-02-20",
+    "shedule": [
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Иностранный язык",
+          "type": "зач",
+          "teacher": "Эркенова Д.И.",
+          "room": "И-311"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Физика",
+          "type": "зач",
+          "teacher": "Филимонов В.В.",
+          "room": "В-409"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Немецкий язык",
+          "type": "зач",
+          "teacher": "Зайцев Е.В.",
+          "room": "А-138"
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Физическая культура и спорт",
+          "type": "зач",
+          "teacher": null,
+          "room": null
+        },
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Документационное обеспечение проектно-конструкторских работ",
+          "type": "зач",
+          "teacher": "Князев Я.О.",
+          "room": "С-20*  254-к"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Программирование",
+          "type": "КР",
+          "teacher": "Данилушкин А.Ю.",
+          "room": "И-202-а"
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Ознакомительная практика",
+          "type": "ЗД",
+          "teacher": null,
+          "room": "каф."
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ]
+  },
+  {
+    "number": "ЭЭБО-01-20",
+    "shedule": [
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Физическая культура и спорт",
+          "type": "зач",
+          "teacher": null,
+          "room": null
+        },
+        null,
+        {
+          "pair": "18 н. Физика",
+          "type": "зач",
+          "teacher": "Попов А.М.",
+          "room": "В-326"
+        },
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Ин.яз.\n18 н. Фр.яз\n18 н. Нем. язык",
+          "type": "зач\nзач\nзач",
+          "teacher": "Зазымкина Д.А.\nОслякова И.В.\nЗайцев Е.В.",
+          "room": "А-324\nИ-310\n"
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Ознакомительная практика",
+          "type": "ЗД",
+          "teacher": null,
+          "room": "каф."
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Программирование",
+          "type": "КР",
+          "teacher": "Данилушкин А.Ю.",
+          "room": "И-202-а"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Документационное обеспечение проектно-конструкторских работ",
+          "type": "зач",
+          "teacher": "Князев Я.О.",
+          "room": "С-20*  254-к"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ]
+  },
+  {
+    "number": "ЭЭБО-02-20",
+    "shedule": [
+      [
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Иностранный язык",
+          "type": "зач",
+          "teacher": "Эркенова Д.И.",
+          "room": "И-311"
+        },
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Физическая культура и спорт",
+          "type": "зач",
+          "teacher": null,
+          "room": null
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Программирование",
+          "type": "КР",
+          "teacher": "Воронов А.Г.",
+          "room": "ивц-109"
+        },
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Физика",
+          "type": "зач",
+          "teacher": "Жданова Е.В.",
+          "room": "В-408"
+        },
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Немецкий язык",
+          "type": "зач",
+          "teacher": "Зайцев Е.В.",
+          "room": null
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Ознакомительная практика",
+          "type": "ЗД",
+          "teacher": null,
+          "room": "каф."
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Документационное обеспечение проектно-конструкторских работ",
+          "type": "зач",
+          "teacher": "Князев Я.О.",
+          "room": "С-20*  254-к"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ]
+  },
+  {
+    "number": "ЭНБО-01-20",
+    "shedule": [
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Программирование",
+          "type": "КР",
+          "teacher": "Воронов А.Г.",
+          "room": "ивц-109"
+        },
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Физика",
+          "type": "зач",
+          "teacher": "Коробкин Ю.В.",
+          "room": "В-326"
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Ознакомительная практика",
+          "type": "ЗД",
+          "teacher": null,
+          "room": "каф."
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Физическая культура и спорт",
+          "type": "зач",
+          "teacher": null,
+          "room": null
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "pair": "18 н. Документационное обеспечение проектно-конструкторских работ",
+          "type": "зач",
+          "teacher": "Князев Я.О.",
+          "room": "С-20*  254-к"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Иностранный язык",
+          "type": "зач",
+          "teacher": "Миролюбова Н.А.",
+          "room": "И-314"
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ]
+  },
+  {
+    "number": "ЭНБО-02-20",
+    "shedule": [
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Иностранный язык",
+          "type": "зач",
+          "teacher": "Эркенова Д.И.",
+          "room": "И-311"
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Физика",
+          "type": "зач",
+          "teacher": "Козинцева М.В.",
+          "room": "В-321"
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Ознакомительная практика",
+          "type": "ЗД",
+          "teacher": null,
+          "room": "каф."
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Программирование",
+          "type": "КР",
+          "teacher": "Каленюк И.В.",
+          "room": "А-424-2"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Физическая культура и спорт",
+          "type": "зач",
+          "teacher": null,
+          "room": null
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "pair": "18 н. Документационное обеспечение проектно-конструкторских работ",
+          "type": "зач",
+          "teacher": "Князев Я.О.",
+          "room": "С-20*  254-к"
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ]
+  }
+]

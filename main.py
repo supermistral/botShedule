@@ -1,6 +1,7 @@
 import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.utils import get_random_id
+import settings
 
 
 class VK:
@@ -20,8 +21,7 @@ class VK:
     def msg(self, user_id, message):
         self.vk.messages.send(user_id=user_id, random_id=get_random_id(), message=message)
 
-token = ""
 
 if __name__ == "__main__":
-    vk = VK(token)
+    vk = VK(settings.TOKEN)
     vk.run()
