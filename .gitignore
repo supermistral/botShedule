@@ -6,3 +6,7 @@ shedule/
 *.xlsx
 
 .env
+
+__pycache__
+*.pyc
+*.bak

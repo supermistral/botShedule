@@ -1,23 +1,21 @@
 import json, requests, os, openpyxl, re
 from bs4 import BeautifulSoup as BS
-
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import settings
+from utils import FileUtils
 
 
 class SheduleLoader:
     def __init__(self):
         self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0'}
         self.url = "https://www.mirea.ru/schedule/"
-        self.base_dir = "shedule\\"
 
     
     def get_xlsxName(self, name) -> str:
-        return self.base_dir + "xlsx\\" + name + ".xlsx"
+        return FileUtils.get_path_xlsx(name + ".xlsx")
 
 
     def get_jsonName(self, name) -> str:
-        return self.base_dir + "json\\" + name + ".json"
+        return FileUtils.get_path_json(name + ".json")
 
 
     def get_shedule_refs(self) -> list:
@@ -38,7 +36,7 @@ class SheduleLoader:
 
 
     def save_in_xlsx(self, ref, fileName) -> None:
-        print(f"Запись {fileName}.xlsx", end="\t")
+        print(f"Запись -> {fileName}.xlsx", end="\t")
         open(self.get_xlsxName(fileName), 'wb').write(ref)
         print("успешно")
 
@@ -77,7 +75,7 @@ class SheduleLoader:
 
 
     def save_in_json(self, shedule, fileName) -> None:
-        print(f"Запись отформатированных данных в {fileName}.json", end="\t")
+        print(f"Запись отформатированных данных -> {fileName}.json", end="\t")
         with open(self.get_jsonName(fileName), 'w', encoding="utf-8") as jsonFile:
             json.dump(
                 shedule, 
@@ -86,7 +84,10 @@ class SheduleLoader:
                 indent=2, 
                 separators=(',', ': ')
             )
-        print("успешно")
+        if shedule:
+            print("успешно")
+        else:
+            print("файл пуст!")
 
 
 
@@ -185,13 +186,15 @@ class SheduleParser:
 
     def parse_group(self) -> dict:
         group = {}
-        group["number"] = self.get_group_number()
-        group["shedule"] = []
+
+        numberGroup = self.get_group_number()
+        group[numberGroup] = self.get_group_number()
+        group[numberGroup] = []
 
         for rowIndex in range(4, 76, 12):
-            group["shedule"].append([])
+            group[numberGroup].append([])
             for tempRowIndex in range(rowIndex, rowIndex + 12):
-                group["shedule"][-1].append(self.get_row_data(tempRowIndex))
+                group[numberGroup][-1].append(self.get_row_data(tempRowIndex))
 
         return group
 
@@ -210,7 +213,7 @@ class SheduleParser:
         return row
 
 
+
 if __name__ == "__main__":
     loader = SheduleLoader()
     loader.parse_shedule()
-    # loader.parse_shedule()
