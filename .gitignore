@@ -10,3 +10,5 @@ shedule/
 __pycache__
 *.pyc
 *.bak
+
+*.sqlite

@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-import os
+import os, datetime
 
 load_dotenv()
 
@@ -22,3 +22,24 @@ XLSX_DIR = os.path.join(SHEDULE_DIR, "xlsx")
 
 # Директория с json
 JSON_DIR = os.path.join(SHEDULE_DIR, "json")
+
+# Дата старта учебы - день начала 1 учебной недели
+# Формат - год, месяц, день
+STUDY_FIRST_DAY = datetime.datetime(2021, 2, 9)
+
+# Длительность семестра в неделях
+STUDY_DURATION_WEEK = 17
+
+# Последний день учебной недели
+STUDY_LAST_DAY = STUDY_FIRST_DAY + datetime.timedelta(weeks=STUDY_DURATION_WEEK)
+
+# Недели которые заменены другими неделями
+WEEKS_REPLACED = {
+    17: 13,
+}
+
+# Имя базы данных
+DB_NAME = "users"
+
+# Имя таблицы в бд
+DB_TABLE_NAME = "users"
