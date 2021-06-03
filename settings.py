@@ -6,8 +6,11 @@ load_dotenv()
 # Токен в вк
 TOKEN = os.environ.get("TOKEN")
 
+# Токен для погоды
+TOKEN_WEATHER = os.environ.get("TOKEN_WEATHER")
+
 # Институты, которые нужно выгрузить в память
-# ИИТ | ФТИ | ИРТС | КБИСП | ИТХТ | ИКИБ | ИЭП | ИИНТЕГУ
+# ИИТ | ФТИ | ИРТС | КБИСП | ИТХТ | ИК | ИЭП | ИИНТЕГУ
 # Пример : INSTITUTIONS = ['ИИТ']
 INSTITUTIONS = ["ИИТ"]
 
@@ -30,16 +33,13 @@ STUDY_FIRST_DAY = datetime.datetime(2021, 2, 9)
 # Длительность семестра в неделях
 STUDY_DURATION_WEEK = 17
 
-# Последний день учебной недели
-STUDY_LAST_DAY = STUDY_FIRST_DAY + datetime.timedelta(weeks=STUDY_DURATION_WEEK)
-
 # Недели которые заменены другими неделями
 WEEKS_REPLACED = {
     17: 13,
 }
 
 # Имя базы данных
-DB_NAME = "users"
+DB_NAME = "users.sqlite"
 
 # Имя таблицы в бд
 DB_TABLE_NAME = "users"

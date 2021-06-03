@@ -6,6 +6,10 @@ class SheduleReader:
     def __init__(self):
         self.shedule = {"default": {}, "exam": {}}
         self.read_json()
+        self.months = [
+            'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа',
+            'сентября', 'октября', 'ноября', 'декабря' 
+        ]
 
 
     def read_json(self) -> None:
@@ -64,20 +68,20 @@ class SheduleReader:
                 tempData += datetime.timedelta(days=1)
 
         for oneDate in dates:
-            studyWeek = (oneDate - settings.STUDY_FIRST_DAY).days // 7 + 1
-
+            studyWeek = self.get_week(oneDate)
+            
+            message += f"Расписание на {oneDate.day} {self.months[oneDate.month]}\n"
             # Проверка на замененные недели
             if studyWeek in settings.WEEKS_REPLACED:
                 studyWeek = settings.WEEKS_REPLACED[studyWeek]
             shedule = self.get_group_day_shedule(group, oneDate, studyWeek)
 
             if shedule is None:
-                message = "Расписание указанной группы не найдено"
+                message = "не найдено"
                 break
             message += self.format_group_day_shedule(shedule, studyWeek) + "\n"
 
         return message
-
 
     
     def get_group_day_shedule(self, group, date, week) -> list or None:
@@ -89,7 +93,7 @@ class SheduleReader:
         if week > settings.STUDY_DURATION_WEEK:
             key = "exam"
 
-        if group not in self.shedule[key]:
+        if group not in self.shedule[key] or date.weekday() > 5:
             return None
 
         return self.shedule[key][group][date.weekday()]
@@ -125,19 +129,23 @@ class SheduleReader:
         Возвращает строку с парой, типом занятия и т.д.
         """
 
-        pairs = pair["pair"].split("\n")
-        typesPairs = pair["type"].split("\n")
-        teachers = pair["teacher"].split("\n")
-        rooms = pair["room"].split("\n")
-        formatPair = ""
+        pairs       = self.check_pairUnit(pair["pair"])
+        typesPairs  = self.check_pairUnit(pair["type"])
+        teachers    = self.check_pairUnit(pair["teacher"])
+        rooms       = self.check_pairUnit(pair["room"])
+        formatPair  = ""
 
         for ind in range(len(pairs)):
             pairString = pairs[ind]
-            # print(pairString)
+
             # Поиск строки 'кр.' - 'кроме' недели (на этой неделе пары нет)
-            weekExceptionReg = re.compile(r"кр\.?\s\d+").search(pairString.lower())
-            if weekExceptionReg and weekExceptionReg.group(0) == week:
-                continue
+            weekExceptionReg = re.compile(r"кр\.?\s\(\d+,?\s?)+ н\.?\s?").search(pairString.lower())
+            if weekExceptionReg:
+                tempWeeksString = weekExceptionReg.group(0)
+                if week in tempWeeksString.split(" ")[1].split(","):
+                    continue
+                else:
+                    formatPair += tempWeeksString.replace(tempWeeksString, "")
 
             # Поиск строки '1, 2, 3, 4 н.' - недели, на которых проходят пары
             weekNoExceptionReg = re.compile(r"(\d+,?\s?)+ н\.?\s?").search(pairString.lower())
@@ -149,18 +157,28 @@ class SheduleReader:
             else:
                 formatPair += pairString
 
-            formatPair += f" | {self.get_pair_unit(typesPairs, ind)} | {self.get_pair_unit(teachers, ind)}" + \
-                f" | {rooms[ind]}\n"
+            formatPair += f" | {self.get_pairUnit(typesPairs, ind)} | {self.get_pairUnit(teachers, ind)}" + \
+                f" | {self.get_pairUnit(rooms, ind)}\n"
 
         if not formatPair:
             return "-\n"
         return formatPair
 
     
-    def get_pair_unit(self, stringList, ind) -> str:
+    def get_pairUnit(self, stringList, ind) -> str:
         if ind >= len(stringList):
             return "-"
         return stringList[ind]
+
+
+    def check_pairUnit(self, pairUnit) -> list:
+        if pairUnit is None:
+            return []
+        return pairUnit.split("\n")
+
+    
+    def get_week(self, date=datetime.datetime.today()):
+        return (date - settings.STUDY_FIRST_DAY).days // 7 + 1
 
 
 
