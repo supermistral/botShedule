@@ -16,6 +16,15 @@ class FileUtils:
         Получение пути к файлу из директории json
         """
         return os.path.join(settings.JSON_DIR, name)
+    
+    @staticmethod
+    def remove_files_from_dir(dirName: str, fileExtension: str = "") -> None:
+        """
+        Очистка директории
+        """
+        fileList = [ f for f in os.listdir(dirName) if f.endswith(fileExtension)]
+        for fileName in fileList:
+            os.remove(os.path.join(dirName, fileName))
 
 
 

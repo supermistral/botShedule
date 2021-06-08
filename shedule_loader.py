@@ -2,6 +2,7 @@ import json, requests, os, openpyxl, re
 from bs4 import BeautifulSoup as BS
 import settings
 from utils import FileUtils
+from abc import abstractmethod
 
 
 class SheduleLoader:
@@ -10,11 +11,11 @@ class SheduleLoader:
         self.url = "https://www.mirea.ru/schedule/"
 
     
-    def get_xlsxName(self, name) -> str:
+    def get_xlsxName(self, name: str) -> str:
         return FileUtils.get_path_xlsx(name + ".xlsx")
 
 
-    def get_jsonName(self, name) -> str:
+    def get_jsonName(self, name: str) -> str:
         return FileUtils.get_path_json(name + ".json")
 
 
@@ -23,7 +24,7 @@ class SheduleLoader:
         bs = BS(response.text, 'lxml')
         block = bs.find("div", attrs={"class": "uk-clearfix"})
 
-        search_table = lambda href: href and re.compile(r"\.xlsx$").search(href)
+        search_table = lambda href: href and href.endswith(".xlsx")
 
         # All refs with .xls or .xlsx
         refList = block.find_all("a", href=search_table)
@@ -35,26 +36,28 @@ class SheduleLoader:
         return refs
 
 
-    def save_in_xlsx(self, ref, fileName) -> None:
-        print(f"Запись -> {fileName}.xlsx", end="\t")
+    def save_in_xlsx(self, ref: str, fileName: str) -> None:
+        print(f"Запись -> {fileName + '.xlsx':45}", end="\t")
         open(self.get_xlsxName(fileName), 'wb').write(ref)
         print("успешно")
 
 
-    def write_shedules(self, refList, fileNameList) -> None:
+    def write_shedules(self, refList: list, fileNameList: list) -> None:
         for (ref, name) in zip(refList, fileNameList):
             self.save_in_xlsx(ref, name)
 
 
-    def translate_to_json(self, fileNameList) -> None:
+    def translate_to_json(self, fileNameList: list) -> None:
         for name in fileNameList:
             wb = openpyxl.load_workbook(self.get_xlsxName(name))
             sheet = wb[wb.sheetnames[0]]
             
-            parser = SheduleParser(sheet)
-            sheduleList = parser.parse()
+            parser = SheduleParserExam(sheet) if re.search(r"(экз|сессия)", name.lower()) \
+                else SheduleParserDefault(sheet)
+
+            sheduleDict = parser.parse()
             
-            self.save_in_json(sheduleList, name)
+            self.save_in_json(sheduleDict, name)
 
 
     def parse_shedule(self) -> None:
@@ -68,14 +71,16 @@ class SheduleLoader:
         fileNames = [re.sub(r"(\s|,|\)|\()", "_", name).replace("..", ".").replace(".xlsx", "") for name in fileNames]
 
         # Запись файлов
+        FileUtils.remove_files_from_dir(settings.XLSX_DIR, ".xlsx")
         self.write_shedules(refsFiles, fileNames)
 
         # Открытие и парсинг файлов
+        FileUtils.remove_files_from_dir(settings.JSON_DIR, ".json")
         self.translate_to_json(fileNames)
 
 
-    def save_in_json(self, shedule, fileName) -> None:
-        print(f"Запись отформатированных данных -> {fileName}.json", end="\t")
+    def save_in_json(self, shedule: dict, fileName: str) -> None:
+        print(f"Запись отформатированных данных -> {fileName + '.json':45}", end="\t")
         with open(self.get_jsonName(fileName), 'w', encoding="utf-8") as jsonFile:
             json.dump(
                 shedule, 
@@ -92,10 +97,18 @@ class SheduleLoader:
 
 
 class SheduleParser:
-    def __init__(self, table):
+    def __init__(self, table, offset, addOffset, startColIndex):
+        """
+        table - лист с расписанием
+        offset - смещение по столбцам для поиска групп
+        addOffset - добавочное смещение по столбцам при встрече с желтыми колонками
+        startColIndex - индекс (буква) в столбце - индекс первой группы
+        """
         self.table = table
-        self.colIndex = 'F'
-        self.colIndexList = ['F']
+        self.colIndex = startColIndex
+        self.colIndexList = [startColIndex]
+        self._colIndexOffset = offset
+        self._colIndexAddOffset = addOffset
 
 
     def _update_colIndex(self, offset, ind, colIndexList) -> None:
@@ -114,8 +127,9 @@ class SheduleParser:
             colIndexList[ind] = chr(temp)
 
 
-    def update_colIndex(self) -> str:
-        self._update_colIndex(5, len(self.colIndexList) - 1, self.colIndexList)
+    def update_colIndex(self, offset = None) -> str:
+        offset = self._colIndexAddOffset if offset else self._colIndexOffset
+        self._update_colIndex(offset, len(self.colIndexList) - 1, self.colIndexList)
         return "".join(self.colIndexList)
 
 
@@ -125,30 +139,34 @@ class SheduleParser:
         return "".join(colList) + str(ind)
 
 
+    @abstractmethod
     def colIndexSubject(self, i) -> str:
-        return self.get_cell(i)
+        return
 
 
+    @abstractmethod
     def colIndexTypeSubject(self, i) -> str:
-        return self.get_cell(i, 1)
+        return
 
 
+    @abstractmethod
     def colIndexTeacher(self, i) -> str:
-        return self.get_cell(i, 2)
+        return
 
 
+    @abstractmethod
     def colIndexRoom(self, i) -> str:
-        return self.get_cell(i, 3)
+        return
 
-
+    
     def get_group_number(self) -> str:
         number = self.table[self.get_cell(2)].value
 
         # Встретилась запись, отличная от шаблона группы
         # - пустой столбец (в начале) или желтая колонка 'День недели'
-        # Нужно прибавить отступ в 5 столбцов
-        if number is None or not re.compile(r"[а-яА-Я]+-\d+").search(number):
-            self.colIndex = self.update_colIndex()
+        # Нужно прибавить отступ в self.colIndexOffset столбцов
+        if number is None or not re.search(r"^[а-яА-Я]+-\d{2}-\d{2}$", number):
+            self.colIndex = self.update_colIndex(self._colIndexAddOffset)
 
         return self.table[self.get_cell(2)].value
 
@@ -169,34 +187,82 @@ class SheduleParser:
         return self.table[self.colIndexRoom(i)].value
 
 
-    def parse(self) -> list:
-        shedule = []
+    def parse(self, start, end, weekLength, studyWeekLength, stepDay) -> dict:
+        """
+        Парсинг раписания и возврат в форме словаря: ключ - номер группы
+
+        start - начальный индекс в строке
+        end - конечный индекс в строке
+        weekLength - количество строк в таблице под 1 неделю
+        studyWeekLength - количество строк в таблице под 1 неделю с реальными значениями
+        stepDay - шаг внутри недели для парсинга каждого дня
+        """
+
+        shedule = {}
 
         while (1):
-            # Конец таблицы - пустая ячейка
-            if not self.get_group_number() \
-                or not self.get_group_number().replace(" ", ""):
-                break
+            # Конец таблицы - 2 пустых ячейки с номером группы подряд
+            # Проверка на пустую колонку, за которой есть информация (не конец таблицы)
+            # Защита от неверно составленного расписания с пропущенной колонкой
+            group = self.get_group_number()
+            if not group or not re.compile(r"[а-яА-Я]+-\d{2}-\d{2}").search(group):
+                group = self.get_group_number()
+                if not group or not re.compile(r"[а-яА-Я]+-\d{2}-\d{2}").search(group):
+                    break
 
-            shedule.append(self.parse_group())
+            shedule.update(self.parse_group(start, end, weekLength, studyWeekLength, stepDay))
             self.colIndex = self.update_colIndex()
 
         return shedule
 
 
-    def parse_group(self) -> dict:
+    def parse_group(self, start, end, weekLength, studyWeekLength, stepDay) -> dict:
         group = {}
 
         numberGroup = self.get_group_number()
         group[numberGroup] = self.get_group_number()
         group[numberGroup] = []
 
-        for rowIndex in range(4, 76, 12):
+        for rowIndex in range(start, end, weekLength):
             group[numberGroup].append([])
-            for tempRowIndex in range(rowIndex, rowIndex + 12):
+            for tempRowIndex in range(rowIndex, rowIndex + studyWeekLength, stepDay):
                 group[numberGroup][-1].append(self.get_row_data(tempRowIndex))
 
         return group
+
+
+    @abstractmethod
+    def get_row_data(self, rowIndex) -> dict or None:
+        """
+        Получение информации о занятии по индексу в строке таблицы
+        """
+        return
+
+
+
+class SheduleParserDefault(SheduleParser):
+    def __init__(self, table):
+        super().__init__(table, 5, 5, 'F')
+
+    
+    def colIndexSubject(self, i) -> str:
+        return self.get_cell(i)
+
+
+    def colIndexTypeSubject(self, i) -> str:
+        return self.get_cell(i, 1)
+
+
+    def colIndexTeacher(self, i) -> str:
+        return self.get_cell(i, 2)
+
+
+    def colIndexRoom(self, i) -> str:
+        return self.get_cell(i, 3)
+
+
+    def parse(self) -> dict:
+        return super().parse(4, 76, 12, 12, 1)
 
 
     def get_row_data(self, rowIndex) -> dict or None:
@@ -208,6 +274,55 @@ class SheduleParser:
 
         row["type"] = self.get_type_subjects(rowIndex)
         row["teacher"] = self.get_teachers(rowIndex)
+        row["room"] = self.get_room(rowIndex)
+    
+        return row
+
+
+
+class SheduleParserExam(SheduleParser):
+    def __init__(self, table):
+        super().__init__(table, 4, 2, 'C')
+
+    
+    def colIndexSubject(self, i) -> str:
+        return self.get_cell(i + 1)
+
+
+    def colIndexTypeSubject(self, i) -> str:
+        return self.get_cell(i)
+
+
+    def colIndexTeacher(self, i) -> str:
+        return self.get_cell(i + 2)
+
+
+    def colIndexRoom(self, i) -> str:
+        return self.get_cell(i, 2)
+
+
+    def colIndexTime(self, i) -> str:
+        return self.get_cell(i, 1)
+    
+
+    def get_time(self, i) -> str:
+        return self.table[self.colIndexTime(i)].value
+
+
+    def parse(self) -> dict:
+        return super().parse(3, 60, 19, 18, 3)
+
+
+    def get_row_data(self, rowIndex) -> dict or None:
+        row = {}
+        row["pair"] = self.get_subjects(rowIndex)
+
+        if row["pair"] is None or not re.compile(r"[а-яА-Я]+").search(row["pair"]):
+            return None
+
+        row["type"] = self.get_type_subjects(rowIndex)
+        row["teacher"] = self.get_teachers(rowIndex)
+        row["time"] = self.get_time(rowIndex)
         row["room"] = self.get_room(rowIndex)
     
         return row

@@ -4,7 +4,7 @@ from utils import FileUtils
 
 class SheduleReader:
     def __init__(self):
-        self.shedule = {"default": {}, "exam": {}}
+        self.shedule = {"default": {}, "test": {}, "exam": {}}
         self.read_json()
         self.months = [
             'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа',
@@ -39,13 +39,14 @@ class SheduleReader:
         
         for fileName in fileList:
             with open(fileName, 'r', encoding="utf-8") as f:
-                sheduleList = json.load(f)
+                sheduleDict = json.load(f)
                 key = "default"
                 if "зач" in fileName.lower():
+                    key = "test"
+                elif "экз" in fileName.lower():
                     key = "exam"
 
-                for shedule in sheduleList:
-                    self.shedule[key].update(shedule)
+                self.shedule[key].update(sheduleDict)
 
 
     def get_group_shedule(self, group, date=datetime.datetime.today(), date_last=None) -> str:
@@ -69,6 +70,10 @@ class SheduleReader:
 
         for oneDate in dates:
             studyWeek = self.get_week(oneDate)
+
+            if studyWeek > settings.STUDY_DURATION_WEEK:
+                message += self.get_group_shedule_exam(group, date)
+                break
             
             message += f"Расписание на {oneDate.day} {self.months[oneDate.month]}\n"
             # Проверка на замененные недели
@@ -90,8 +95,8 @@ class SheduleReader:
         """
 
         key = "default"
-        if week > settings.STUDY_DURATION_WEEK:
-            key = "exam"
+        if week == settings.STUDY_DURATION_WEEK + 1:
+            key = "test"
 
         if group not in self.shedule[key] or date.weekday() > 5:
             return None
@@ -142,7 +147,7 @@ class SheduleReader:
             weekExceptionReg = re.compile(r"кр\.?\s\(\d+,?\s?)+ н\.?\s?").search(pairString.lower())
             if weekExceptionReg:
                 tempWeeksString = weekExceptionReg.group(0)
-                if week in tempWeeksString.split(" ")[1].split(","):
+                if str(week) in tempWeeksString.split(" ")[1].split(","):
                     continue
                 else:
                     formatPair += tempWeeksString.replace(tempWeeksString, "")
@@ -177,13 +182,75 @@ class SheduleReader:
         return pairUnit.split("\n")
 
     
-    def get_week(self, date=datetime.datetime.today()):
+    def get_week(self, date=datetime.datetime.today()) -> int:
         return (date - settings.STUDY_FIRST_DAY).days // 7 + 1
+
+    
+    def get_group_shedule_exam(
+        self, 
+        group: str, 
+        date: datetime.datetime = datetime.datetime.today(), 
+        date_last: datetime.datetime or None = None
+    ) -> str:
+        """
+        Получение расписание экзаменов группы по дате
+        Дата может быть единственным значением datetime.datetime
+        Если date_last не передается, то выдается информация по раписанию текущей недели
+        Если передается date_last, то date означает начало
+            а date_last - конец промежутка, по которому требуется получить данные
+        """
+
+        message = ""
+        dates = []
+        dateFirstExam = settings.STUDY_FIRST_DAY + datetime.timedelta(weeks=settings.STUDY_DURATION_WEEK + 1)
+        dateFirstExam = dateFirstExam - datetime.timedelta(days=dateFirstExam.weekday())
+        daysFromFirstDate = (date - dateFirstExam).days
+        index = daysFromFirstDate - daysFromFirstDate // 7
+
+        if (index // 6) + 1 > len(self.shedule["exam"][group]):
+            return "Раписания нет"
+
+        if date_last is None:
+            date_last = date + datetime.timedelta(days=5-date.weekday())
+
+        tempData = date
+        while (tempData <= date_last):
+            if tempData.weekday() != 6:         # Кроме воскресений
+                dates.append(tempData)
+            tempData += datetime.timedelta(days=1)
+
+        for oneDate in dates:
+            pair = self.shedule["exam"][group][index // 6][index % 6]
+            index += 1
+
+            if pair is None:
+                continue
+            
+            message += f"Расписание на {oneDate.day} {self.months[oneDate.month]}\n"
+            message += self.format_pair_exam(pair) + "\n"
+
+        return message
+
+
+    def format_pair_exam(self, pair: dict) -> str:
+        pairName    = pair["pair"]
+        typePair    = pair["type"]
+        teacher     = self.get_pairUnit_exam(pair["teacher"])
+        time        = self.get_pairUnit_exam(pair["time"])
+        room        = self.get_pairUnit_exam(pair["room"])
+
+        formatPair  = f"{typePair.upper()} -> {pairName} | {teacher} | {time} | {room}\n"
+        return formatPair
+
+
+    def get_pairUnit_exam(self, pairUnit: str or None) -> str:
+        if pairUnit is None:
+            return "-"
+        return pairUnit
 
 
 
 if __name__ == "__main__":
     reader = SheduleReader()
-    # reader.read_json()
-    # print(reader.shedule["exam"]["ИКБО-01-20"])
-    print(reader.get_group_shedule("ИКБО-23-20"))
+    reader.read_json()
+    # print(reader.get_group_shedule_exam("ИКБО-01-20"))

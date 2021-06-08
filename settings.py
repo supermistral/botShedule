@@ -43,3 +43,6 @@ DB_NAME = "users.sqlite"
 
 # Имя таблицы в бд
 DB_TABLE_NAME = "users"
+
+# Последний день экзаменов - день пересдач
+LAST_DAY_EXAM = datetime.datetime(2021, 7, 5)
