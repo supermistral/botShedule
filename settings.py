@@ -12,6 +12,7 @@ TOKEN_WEATHER = os.environ.get("TOKEN_WEATHER")
 # Институты, которые нужно выгрузить в память
 # ИИТ | ФТИ | ИРТС | КБИСП | ИТХТ | ИК | ИЭП | ИИНТЕГУ
 # Пример : INSTITUTIONS = ['ИИТ']
+# Все сразу : INSTITUTIONS = "__all__"
 INSTITUTIONS = ["ИИТ"]
 
 # Базовая директория
@@ -25,6 +26,9 @@ XLSX_DIR = os.path.join(SHEDULE_DIR, "xlsx")
 
 # Директория с json
 JSON_DIR = os.path.join(SHEDULE_DIR, "json")
+
+# Директория с расписанием учителей
+SHEDULE_TEACHER_DIR = os.path.join(SHEDULE_DIR, "teacher")
 
 # Дата старта учебы - день начала 1 учебной недели
 # Формат - год, месяц, день

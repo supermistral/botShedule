@@ -5,6 +5,7 @@ from utils import FileUtils
 class SheduleReader:
     def __init__(self):
         self.shedule = {"default": {}, "test": {}, "exam": {}}
+        self.sheduleTeacher = {}        # расписание преподавателей
         self.read_json()
         self.months = [
             'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа',
@@ -32,8 +33,7 @@ class SheduleReader:
         fileList = list(filter(lambda name: reExp.search(name.lower()), fileList))
 
         if not fileList:
-            print("Nothing to read")
-            return
+            raise ValueError("Nothing to read")
 
         fileList = [FileUtils.get_path_json(name) for name in fileList]
         
@@ -43,7 +43,7 @@ class SheduleReader:
                 key = "default"
                 if "зач" in fileName.lower():
                     key = "test"
-                elif "экз" in fileName.lower():
+                elif "экз" in fileName.lower() or "сессия" in fileName.lower():
                     key = "exam"
 
                 self.shedule[key].update(sheduleDict)
@@ -52,7 +52,9 @@ class SheduleReader:
     def get_group_shedule(self, group, date=datetime.datetime.today(), date_last=None) -> str:
         """
         Получение расписание группы по дате
+
         Дата может быть единственным значением datetime.datetime
+
         Если передается date_last, то date означает начало
             а date_last - конец промежутка, по которому требуется получить данные
         """
@@ -107,7 +109,9 @@ class SheduleReader:
     def format_group_day_shedule(self, shedule, week) -> str:
         """
         Форматирование строки с списком пар по выбранной неделе
+
         Содержит логику итерации по списку пар (12 элементов)
+
         Определяет четность/нечетность недели
         """
 
@@ -131,6 +135,7 @@ class SheduleReader:
     def format_pair(self, pair, week) -> str:
         """
         Форматирование элемента списка с расписанием
+
         Возвращает строку с парой, типом занятия и т.д.
         """
 
@@ -149,8 +154,7 @@ class SheduleReader:
                 tempWeeksString = weekExceptionReg.group(0)
                 if str(week) in tempWeeksString.split(" ")[1].split(","):
                     continue
-                else:
-                    formatPair += tempWeeksString.replace(tempWeeksString, "")
+                formatPair += tempWeeksString.replace(tempWeeksString, "")
 
             # Поиск строки '1, 2, 3, 4 н.' - недели, на которых проходят пары
             weekNoExceptionReg = re.compile(r"(\d+,?\s?)+ н\.?\s?").search(pairString.lower())
@@ -194,8 +198,11 @@ class SheduleReader:
     ) -> str:
         """
         Получение расписание экзаменов группы по дате
+
         Дата может быть единственным значением datetime.datetime
+
         Если date_last не передается, то выдается информация по раписанию текущей недели
+        
         Если передается date_last, то date означает начало
             а date_last - конец промежутка, по которому требуется получить данные
         """
@@ -220,6 +227,10 @@ class SheduleReader:
             tempData += datetime.timedelta(days=1)
 
         for oneDate in dates:
+            if oneDate == settings.LAST_DAY_EXAM:
+                message += f"{oneDate.day} {self.months[oneDate.month]} - день пересдач"
+                break
+
             pair = self.shedule["exam"][group][index // 6][index % 6]
             index += 1
 
@@ -252,5 +263,4 @@ class SheduleReader:
 
 if __name__ == "__main__":
     reader = SheduleReader()
-    reader.read_json()
     # print(reader.get_group_shedule_exam("ИКБО-01-20"))
